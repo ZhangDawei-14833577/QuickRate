@@ -36,6 +36,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.quickrate.ui.theme.QuickRateTheme
+import androidx.compose.ui.Alignment
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -280,7 +281,8 @@ fun SettingRadioRow(
                 role = Role.RadioButton
             )
             .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.Start
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
             selected = selected,
@@ -289,7 +291,7 @@ fun SettingRadioRow(
 
         Text(
             text = text,
-            modifier = Modifier.padding(start = 8.dp),
+            modifier = Modifier.padding(start = 12.dp),
             style = MaterialTheme.typography.bodyLarge
         )
     }
