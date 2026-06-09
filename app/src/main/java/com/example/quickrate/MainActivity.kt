@@ -26,10 +26,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
@@ -37,6 +33,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.quickrate.ui.theme.QuickRateTheme
 import androidx.compose.ui.Alignment
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,11 +49,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun QuickRateApp() {
-    var selectedTab by remember { mutableIntStateOf(0) }
-    var amountText by remember { mutableStateOf("100") }
-    var baseCurrency by remember { mutableStateOf("SGD") }
-    var decimalPlaces by remember { mutableIntStateOf(2) }
+fun QuickRateApp(
+    viewModel: CurrencyViewModel = viewModel()
+) {
+    val selectedTab by viewModel.selectedTab.collectAsState()
+    val amountText by viewModel.amountText.collectAsState()
+    val baseCurrency by viewModel.baseCurrency.collectAsState()
+    val decimalPlaces by viewModel.decimalPlaces.collectAsState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -63,14 +63,14 @@ fun QuickRateApp() {
             NavigationBar {
                 NavigationBarItem(
                     selected = selectedTab == 0,
-                    onClick = { selectedTab = 0 },
+                    onClick = { viewModel.updateSelectedTab(0) },
                     label = { Text("Converter") },
                     icon = {}
                 )
 
                 NavigationBarItem(
                     selected = selectedTab == 1,
-                    onClick = { selectedTab = 1 },
+                    onClick = { viewModel.updateSelectedTab(1) },
                     label = { Text("Settings") },
                     icon = {}
                 )
@@ -80,7 +80,7 @@ fun QuickRateApp() {
         when (selectedTab) {
             0 -> ConverterScreen(
                 amountText = amountText,
-                onAmountChange = { amountText = it },
+                onAmountChange = { viewModel.updateAmount(it) },
                 baseCurrency = baseCurrency,
                 decimalPlaces = decimalPlaces,
                 modifier = Modifier.padding(innerPadding)
@@ -88,9 +88,9 @@ fun QuickRateApp() {
 
             1 -> SettingsScreen(
                 baseCurrency = baseCurrency,
-                onBaseCurrencyChange = { baseCurrency = it },
+                onBaseCurrencyChange = { viewModel.updateBaseCurrency(it) },
                 decimalPlaces = decimalPlaces,
-                onDecimalPlacesChange = { decimalPlaces = it },
+                onDecimalPlacesChange = { viewModel.updateDecimalPlaces(it) },
                 modifier = Modifier.padding(innerPadding)
             )
         }
