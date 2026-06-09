@@ -83,6 +83,7 @@ fun QuickRateApp(
                 onAmountChange = { viewModel.updateAmount(it) },
                 baseCurrency = baseCurrency,
                 decimalPlaces = decimalPlaces,
+                rates = viewModel.getRates(),
                 modifier = Modifier.padding(innerPadding)
             )
 
@@ -103,10 +104,10 @@ fun ConverterScreen(
     onAmountChange: (String) -> Unit,
     baseCurrency: String,
     decimalPlaces: Int,
+    rates: List<CurrencyRate>,
     modifier: Modifier = Modifier
 ) {
     val amount = amountText.toDoubleOrNull() ?: 0.0
-    val rates = getMockRates(baseCurrency)
 
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -338,33 +339,6 @@ data class CurrencyRate(
     val rate: Double
 )
 
-fun getMockRates(baseCurrency: String): List<CurrencyRate> {
-    return when (baseCurrency) {
-        "USD" -> listOf(
-            CurrencyRate("SGD", 1.35),
-            CurrencyRate("CNY", 7.18),
-            CurrencyRate("AUD", 1.52)
-        )
-
-        "CNY" -> listOf(
-            CurrencyRate("SGD", 0.19),
-            CurrencyRate("USD", 0.14),
-            CurrencyRate("AUD", 0.21)
-        )
-
-        "AUD" -> listOf(
-            CurrencyRate("SGD", 0.89),
-            CurrencyRate("USD", 0.66),
-            CurrencyRate("CNY", 4.72)
-        )
-
-        else -> listOf(
-            CurrencyRate("CNY", 5.32),
-            CurrencyRate("USD", 0.74),
-            CurrencyRate("AUD", 1.13)
-        )
-    }
-}
 
 @Preview(showBackground = true)
 @Composable

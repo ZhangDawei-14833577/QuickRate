@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class CurrencyViewModel : ViewModel() {
 
+    private val repository = CurrencyRepository()
+
     private val _amountText = MutableStateFlow("100")
     val amountText: StateFlow<String> = _amountText.asStateFlow()
 
@@ -33,5 +35,10 @@ class CurrencyViewModel : ViewModel() {
 
     fun updateSelectedTab(newTab: Int) {
         _selectedTab.value = newTab
+    }
+
+
+    fun getRates(): List<CurrencyRate> {
+        return repository.getMockRates(_baseCurrency.value)
     }
 }
