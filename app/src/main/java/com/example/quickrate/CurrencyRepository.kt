@@ -1,6 +1,33 @@
 package com.example.quickrate
 
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
 class CurrencyRepository {
+
+    private val api: CurrencyApiService = Retrofit.Builder()
+        .baseUrl("https://open.er-api.com/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(CurrencyApiService::class.java)
+
+    suspend fun getLatestRates(baseCurrency: String): List<CurrencyRate> {
+        val response = api.getLatestRates(baseCurrency)
+
+        val targetCurrencies = when (baseCurrency) {
+            "SGD" -> listOf("CNY", "USD", "AUD")
+            "USD" -> listOf("SGD", "CNY", "AUD")
+            "CNY" -> listOf("SGD", "USD", "AUD")
+            "AUD" -> listOf("SGD", "USD", "CNY")
+            else -> listOf("CNY", "USD", "AUD")
+        }
+
+        return targetCurrencies.mapNotNull { currency ->
+            response.rates[currency]?.let { rate ->
+                CurrencyRate(currency, rate)
+            }
+        }
+    }
 
     fun getMockRates(baseCurrency: String): List<CurrencyRate> {
         return when (baseCurrency) {

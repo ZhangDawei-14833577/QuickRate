@@ -56,6 +56,9 @@ fun QuickRateApp(
     val amountText by viewModel.amountText.collectAsState()
     val baseCurrency by viewModel.baseCurrency.collectAsState()
     val decimalPlaces by viewModel.decimalPlaces.collectAsState()
+    val rates by viewModel.rates.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -83,7 +86,10 @@ fun QuickRateApp(
                 onAmountChange = { viewModel.updateAmount(it) },
                 baseCurrency = baseCurrency,
                 decimalPlaces = decimalPlaces,
-                rates = viewModel.getRates(),
+                rates = rates,
+                isLoading = isLoading,
+                errorMessage = errorMessage,
+                onRefresh = { viewModel.fetchRates() },
                 modifier = Modifier.padding(innerPadding)
             )
 
@@ -105,6 +111,9 @@ fun ConverterScreen(
     baseCurrency: String,
     decimalPlaces: Int,
     rates: List<CurrencyRate>,
+    isLoading: Boolean,
+    errorMessage: String?,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val amount = amountText.toDoubleOrNull() ?: 0.0
