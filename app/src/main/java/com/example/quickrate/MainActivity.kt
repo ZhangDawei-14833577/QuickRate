@@ -35,6 +35,10 @@ import com.example.quickrate.ui.theme.QuickRateTheme
 import androidx.compose.ui.Alignment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.collectAsState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CurrencyExchange
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,14 +72,24 @@ fun QuickRateApp(
                     selected = selectedTab == 0,
                     onClick = { viewModel.updateSelectedTab(0) },
                     label = { Text("Converter") },
-                    icon = {}
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.CurrencyExchange,
+                            contentDescription = "Currency converter"
+                        )
+                    }
                 )
 
                 NavigationBarItem(
                     selected = selectedTab == 1,
                     onClick = { viewModel.updateSelectedTab(1) },
                     label = { Text("Settings") },
-                    icon = {}
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Settings"
+                        )
+                    }
                 )
             }
         }
